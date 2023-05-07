@@ -243,6 +243,56 @@ cmd_wds_set_ip_family_prepare(struct qmi_dev *qmi, struct qmi_request *req, stru
 	return QMI_CMD_EXIT;
 }
 
+static struct {
+	uint32_t mux_id;
+	uint32_t iface;
+} wds_endpoint_info;
+
+#define cmd_wds_bind_mux_cb no_cb
+
+static enum qmi_cmd_result
+cmd_wds_bind_mux_prepare(struct qmi_dev *qmi, struct qmi_request *req,
+				   struct qmi_msg *msg, char *arg)
+{
+	struct qmi_wds_bind_mux_data_port_request wds_mux_req = {
+		QMI_INIT_SEQUENCE(
+				  endpoint_info,
+				  .endpoint_type = QMI_DATA_ENDPOINT_TYPE_HSUSB,
+				  .interface_number = wds_endpoint_info.iface,
+				  ),
+		QMI_INIT(mux_id, wds_endpoint_info.mux_id),
+		QMI_INIT(client_type, QMI_WDS_CLIENT_TYPE_TETHERED),
+	};
+
+	qmi_set_wds_bind_mux_data_port_request(msg, &wds_mux_req);
+	return QMI_CMD_REQUEST;
+}
+
+#define cmd_wds_mux_id_cb no_cb
+
+static enum qmi_cmd_result cmd_wds_mux_id_prepare(struct qmi_dev *qmi,
+						  struct qmi_request *req,
+						  struct qmi_msg *msg,
+						  char *arg)
+{
+	uint32_t mux_num = strtoul(arg, NULL, 10);
+
+	wds_endpoint_info.mux_id = mux_num;
+	return QMI_CMD_DONE;
+}
+
+#define cmd_wds_ep_iface_cb no_cb
+
+static enum qmi_cmd_result
+cmd_wds_ep_iface_prepare(struct qmi_dev *qmi, struct qmi_request *req,
+				struct qmi_msg *msg, char *arg)
+{
+        uint32_t iface_num = strtoul(arg, NULL, 10);
+
+        wds_endpoint_info.iface = iface_num;
+        return QMI_CMD_DONE;
+}
+
 static void wds_to_ipv4(const char *name, const uint32_t addr)
 {
 	struct in_addr ip_addr;

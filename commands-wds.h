@@ -33,7 +33,10 @@
 	__uqmi_command(wds_set_ip_family, set-ip-family, required, QMI_SERVICE_WDS), \
 	__uqmi_command(wds_set_autoconnect_settings, set-autoconnect, required, QMI_SERVICE_WDS), \
 	__uqmi_command(wds_reset, reset-wds, no, QMI_SERVICE_WDS), \
-	__uqmi_command(wds_get_current_settings, get-current-settings, no, QMI_SERVICE_WDS) \
+	__uqmi_command(wds_get_current_settings, get-current-settings, no, QMI_SERVICE_WDS), \
+	__uqmi_command(wds_bind_mux, bind-mux, no, QMI_SERVICE_WDS), \
+	__uqmi_command(wds_mux_id, mux-id, required, CMD_TYPE_OPTION), \
+	__uqmi_command(wds_ep_iface, ep-iface, required, CMD_TYPE_OPTION) \
 
 
 #define wds_helptext \
@@ -51,4 +54,6 @@
 		"  --set-ip-family <val>:            Set ip-family (ipv4, ipv6, unspecified)\n" \
 		"  --set-autoconnect <val>:          Set automatic connect/reconnect (disabled, enabled, paused)\n" \
 		"  --get-current-settings:           Get current connection settings\n" \
-
+		"  --bind-mux:			     Bind QMUX data port to controller device (use with options below)\n" \
+		"    --mux-id <id>:		     Set QMUX port id\n" \
+		"    --ep-iface <number>:	     Set endpoint interface number\n"
